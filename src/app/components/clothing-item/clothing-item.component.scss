@@ -1,0 +1,13 @@
+// clothing-item.component.scss
+.clothing-item {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 5px;
+  text-align: center;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}

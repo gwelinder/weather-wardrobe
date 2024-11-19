@@ -1,0 +1,38 @@
+<div class="container">
+  <h1>Welcome to Weather Wardrobe</h1>
+  <p class="description">
+    Weather Wardrobe is your personal clothing assistant that helps you dress
+    appropriately for any weather condition. Simply enter your location, and
+    we'll provide you with clothing recommendations based on the current
+    weather.
+  </p>
+  <div class="features">
+    <h2>Features:</h2>
+    <ul>
+      <li>Real-time weather data</li>
+      <li>Personalized clothing recommendations</li>
+      <li>Easy-to-use interface</li>
+    </ul>
+  </div>
+  <form [formGroup]="locationForm" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <mat-label>Enter Your Location</mat-label>
+      <input
+        matInput
+        formControlName="location"
+        placeholder="e.g., New York, London, Tokyo"
+      />
+      <mat-error *ngIf="locationForm.get('location')?.hasError('required')">
+        Location is required
+      </mat-error>
+    </mat-form-field>
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="locationForm.invalid"
+    >
+      Get Recommendations
+    </button>
+  </form>
+</div>

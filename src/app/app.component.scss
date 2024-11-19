@@ -1,0 +1,31 @@
+// **app.component.scss**
+.header {
+  padding: 1rem;
+  text-align: center;
+  color: white;
+}
+
+nav {
+  margin-left: auto;
+  a {
+    margin: 0 1rem;
+    text-decoration: none;
+    color: #777; /* Updated to use a default gray color */
+  }
+  .active {
+    font-weight: bold;
+    color: #6a0dad; /* Updated to use a default violet color */
+  }
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+}
+
+.main-content {
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}

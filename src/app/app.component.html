@@ -1,0 +1,18 @@
+<!-- **app.component.html** -->
+<header class="header">
+  <mat-toolbar color="primary">
+    <span>{{ title }}</span>
+    <span class="spacer"></span>
+    <nav>
+      <a mat-button routerLink="/" routerLinkActive="active">Home</a>
+      <a mat-button routerLink="/recommendations" routerLinkActive="active"
+        >Recommendations</a
+      >
+      <a mat-button routerLink="/admin" routerLinkActive="active">Admin</a>
+      <a mat-button routerLink="/login" routerLinkActive="active">Login</a>
+    </nav>
+  </mat-toolbar>
+</header>
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>

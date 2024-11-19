@@ -1,0 +1,31 @@
+<div class="recommendations-container">
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+
+  <h2>Recommended Clothing</h2>
+
+  <!-- Display weather information -->
+  <div *ngIf="weatherCondition && !isLoading">
+    <p>Location: {{ location }}</p>
+    <p>Temperature: {{ weatherCondition.temperature }}°C</p>
+    <p>Condition: {{ weatherCondition.conditionName }}</p>
+    <p>Temperature Range: {{ weatherCondition.temperatureRange }}</p>
+  </div>
+  <div *ngIf="!isLoading && recommendations.length; else noRecommendations">
+    <mat-grid-list cols="2" rowHeight="1:1" gutterSize="16px">
+      <mat-grid-tile *ngFor="let item of recommendations">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>{{ item.name }}</mat-card-title>
+          </mat-card-header>
+          <img mat-card-image [src]="item.imageURL" alt="{{ item.name }}" />
+          <mat-card-content>
+            <p>{{ item.description }}</p>
+          </mat-card-content>
+        </mat-card>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+  <ng-template #noRecommendations>
+    <p>{{ errorMessage || "No recommendations available." }}</p>
+  </ng-template>
+</div>

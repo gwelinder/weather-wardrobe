@@ -1,0 +1,19 @@
+<div class="admin-dashboard">
+  <h2>Admin Dashboard</h2>
+  <div *ngIf="clothingItems.length; else noItems">
+    <div class="clothing-item" *ngFor="let item of clothingItems">
+      <h3>{{ item.name }}</h3>
+      <p>{{ item.description }}</p>
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="deleteItem(item.clothingItemId)"
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+  <ng-template #noItems>
+    <p>No clothing items available.</p>
+  </ng-template>
+</div>

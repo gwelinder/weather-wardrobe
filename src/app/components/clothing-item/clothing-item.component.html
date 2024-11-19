@@ -1,0 +1,5 @@
+<div class="clothing-item" *ngIf="item">
+  <h3>{{ item.name }}</h3>
+  <p>{{ item.description }}</p>
+  <img [src]="item.imageURL" alt="{{ item.name }}" />
+</div>
