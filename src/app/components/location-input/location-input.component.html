@@ -20,7 +20,8 @@
       <input
         matInput
         formControlName="location"
-        placeholder="e.g., New York, London, Tokyo"
+        placeholder="e.g., London"
+        required
       />
       <mat-error *ngIf="locationForm.get('location')?.hasError('required')">
         Location is required
@@ -30,9 +31,13 @@
       mat-raised-button
       color="primary"
       type="submit"
-      [disabled]="locationForm.invalid"
+      [disabled]="locationForm.invalid || isLoading"
     >
-      Get Recommendations
+      <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+      <span *ngIf="!isLoading">Get Recommendations</span>
     </button>
   </form>
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
 </div>

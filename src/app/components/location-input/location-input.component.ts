@@ -10,10 +10,11 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { Router } from '@angular/router';
-import { WeatherService } from '../../services/weather.service';
-import { WeatherDataService } from '../../services/weather-data.service';
-import { WeatherCondition } from '../../models/weather';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Router, ActivatedRoute } from '@angular/router';
+import { ClothingService } from '../../services/clothing.service';
+import { WeatherRecommendation } from '../../models/weather';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-location-input',
@@ -24,46 +25,56 @@ import { WeatherCondition } from '../../models/weather';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './location-input.component.html',
   styleUrls: ['./location-input.component.scss'],
 })
 export class LocationInputComponent implements OnInit {
   locationForm!: FormGroup;
+  error: string | null = null;
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
-    private weatherService: WeatherService,
-    private weatherDataService: WeatherDataService, // Inject the WeatherDataService
-    private router: Router
+    private clothingService: ClothingService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
+
   ngOnInit(): void {
     this.locationForm = this.fb.group({
       location: ['', Validators.required],
+    });
+
+    // Get the location from query params if available
+    this.route.queryParams.subscribe(params => {
+      const location = params['location'];
+      if (location) {
+        this.locationForm.patchValue({ location });
+      }
     });
   }
 
   onSubmit(): void {
     if (this.locationForm.valid) {
       const location = this.locationForm.value.location;
-      this.weatherService.getWeatherData(location).subscribe(
-        (weatherCondition: WeatherCondition) => {
-          // Save weather data and location to the shared service
-          this.weatherDataService.setWeatherData(weatherCondition, location);
-
-          // Extract the temperature
-          const temperature = weatherCondition.temperature;
-
-          // Navigate to recommendations with temperature as query parameter
+      this.error = null;
+      this.isLoading = true;
+      
+      this.clothingService.getRecommendations(location).subscribe({
+        next: (recommendation: WeatherRecommendation) => {
+          this.isLoading = false;
           this.router.navigate(['/recommendations'], {
-            queryParams: { temperature },
+            queryParams: { location }
           });
         },
-        (error) => {
-          // Handle error, e.g., show an error message
-          console.error('Failed to get weather data', error);
+        error: (error: HttpErrorResponse) => {
+          console.error('Failed to get recommendations', error);
+          this.error = error.error?.message || error.message || 'Failed to get recommendations. Please try again.';
+          this.isLoading = false;
         }
-      );
+      });
     }
   }
 }

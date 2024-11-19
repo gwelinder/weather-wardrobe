@@ -1,9 +1,10 @@
 import { WeatherCondition } from './weather';
 
 export interface ClothingItem {
-  clothingItemId: number;
-  name: string;
-  description: string;
-  imageURL: string;
-  weatherConditions: WeatherCondition[];
+  ClothingItemId?: number;
+  Name: string;
+  Description: string;
+  ImageURL: string;
+  WeatherConditions?: WeatherCondition[];
+  WeatherConditionIds?: number[];
 }

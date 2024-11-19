@@ -1,34 +1,34 @@
 import { ClothingItem } from './wardrobe';
 
 export interface WeatherCondition {
-  weatherConditionId: number;
-  conditionName: string;
-  temperatureRange: string;
-  temperature?: number;
+  WeatherConditionId: number;
+  ConditionName: string;
+  TemperatureRange: string;
+  Temperature: number;
 }
 
 export interface WeatherRecommendation {
-  weatherCondition?: WeatherCondition;
-  temperature?: number;
-  location: string;
-  recommendedItems: ClothingItem[];
+  WeatherCondition: WeatherCondition;
+  Temperature: number;
+  Location: string;
+  RecommendedItems: ClothingItem[];
 }
 
 export class WeatherConditionImpl implements WeatherCondition {
-  weatherConditionId: number;
-  conditionName: string;
-  temperatureRange: string;
-  temperature?: number;
+  WeatherConditionId: number;
+  ConditionName: string;
+  TemperatureRange: string;
+  Temperature: number;
 
   constructor(
     weatherConditionId: number,
     conditionName: string,
     temperatureRange: string,
-    temperature?: number
+    temperature: number
   ) {
-    this.weatherConditionId = weatherConditionId;
-    this.conditionName = conditionName;
-    this.temperatureRange = temperatureRange;
-    this.temperature = temperature;
+    this.WeatherConditionId = weatherConditionId;
+    this.ConditionName = conditionName;
+    this.TemperatureRange = temperatureRange;
+    this.Temperature = temperature;
   }
 }

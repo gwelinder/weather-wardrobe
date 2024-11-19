@@ -1,19 +1,111 @@
 <div class="admin-dashboard">
-  <h2>Admin Dashboard</h2>
-  <div *ngIf="clothingItems.length; else noItems">
-    <div class="clothing-item" *ngFor="let item of clothingItems">
-      <h3>{{ item.name }}</h3>
-      <p>{{ item.description }}</p>
-      <button
-        mat-raised-button
-        color="warn"
-        (click)="deleteItem(item.clothingItemId)"
-      >
-        Delete
-      </button>
+  <div class="dashboard-header">
+    <h1>Wardrobe Management</h1>
+    <p class="subtitle">Add, edit, and manage clothing items for different weather conditions</p>
+  </div>
+
+  <div class="dashboard-content">
+    <div class="form-section">
+      <mat-card class="form-card">
+        <mat-card-header>
+          <mat-card-title>{{ editingItem ? 'Edit Clothing Item' : 'Add New Clothing Item' }}</mat-card-title>
+          <mat-card-subtitle>{{ editingItem ? 'Update the details below' : 'Fill in the details below to add a new item' }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="itemForm" (ngSubmit)="onSubmit()" class="item-form">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Name</mat-label>
+              <input matInput formControlName="Name" placeholder="Enter item name" required>
+              <mat-error *ngIf="itemForm.get('Name')?.invalid && itemForm.get('Name')?.touched">
+                Name is required
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Description</mat-label>
+              <textarea matInput formControlName="Description" placeholder="Enter item description" rows="3" required></textarea>
+              <mat-error *ngIf="itemForm.get('Description')?.invalid && itemForm.get('Description')?.touched">
+                Description is required
+              </mat-error>
+            </mat-form-field>
+
+            <div class="image-upload-field">
+              <mat-label class="field-label">Image</mat-label>
+              <div class="upload-container">
+                <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" style="display: none">
+                <div class="preview-container" *ngIf="imagePreview || itemForm.get('ImageURL')?.value">
+                  <img [src]="imagePreview || itemForm.get('ImageURL')?.value" alt="Preview" class="image-preview">
+                  <button mat-icon-button color="warn" class="remove-image" (click)="removeImage()">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+                <button mat-stroked-button type="button" (click)="fileInput.click()" *ngIf="!imagePreview && !itemForm.get('ImageURL')?.value">
+                  <mat-icon>cloud_upload</mat-icon>
+                  Upload Image
+                </button>
+              </div>
+            </div>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Weather Conditions</mat-label>
+              <mat-select formControlName="WeatherConditions" multiple required>
+                <mat-option *ngFor="let condition of weatherConditions" [value]="condition">
+                  {{ condition.ConditionName }} ({{ condition.TemperatureRange }}°C)
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="itemForm.get('WeatherConditions')?.invalid && itemForm.get('WeatherConditions')?.touched">
+                Select at least one weather condition
+              </mat-error>
+              <mat-hint>Select all applicable weather conditions</mat-hint>
+            </mat-form-field>
+
+            <div class="form-actions">
+              <button mat-raised-button color="primary" type="submit" [disabled]="itemForm.invalid">
+                <mat-icon>{{ editingItem ? 'save' : 'add' }}</mat-icon>
+                {{ editingItem ? 'Update' : 'Add' }} Item
+              </button>
+              <button mat-stroked-button type="button" (click)="resetForm()" *ngIf="editingItem">
+                <mat-icon>close</mat-icon>
+                Cancel Edit
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="items-section">
+      <h2 class="section-title">Clothing Items</h2>
+      <div class="items-grid">
+        <mat-card *ngFor="let item of clothingItems" class="item-card compact" [class.editing]="editingItem?.ClothingItemId === item.ClothingItemId">
+          <div class="item-content">
+            <div class="image-container">
+              <img [src]="item.ImageURL || 'assets/placeholder-image.png'" [alt]="item.Name" class="item-image">
+            </div>
+            <div class="item-details">
+              <h3 class="item-name">{{ item.Name }}</h3>
+              <p class="item-description">{{ item.Description }}</p>
+              <div class="weather-tags">
+                <mat-chip-set>
+                  <mat-chip *ngFor="let condition of item.WeatherConditions" 
+                           [class]="'condition-' + condition.ConditionName.toLowerCase()"
+                           [matTooltip]="condition.TemperatureRange + '°C'">
+                    {{ condition.ConditionName }}
+                  </mat-chip>
+                </mat-chip-set>
+              </div>
+            </div>
+          </div>
+          <div class="item-actions">
+            <button mat-icon-button color="primary" (click)="editItem(item)" matTooltip="Edit">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteItem(item.ClothingItemId)" matTooltip="Delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </mat-card>
+      </div>
     </div>
   </div>
-  <ng-template #noItems>
-    <p>No clothing items available.</p>
-  </ng-template>
 </div>
